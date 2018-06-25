@@ -6,34 +6,23 @@ var containerConfig = require('./config');
 
 const port = 3000
 CloudKit.configure(containerConfig);
+
+
 var container = CloudKit.getDefaultContainer();
+
 var publicDB = container.publicCloudDatabase;
 container.setUpAuth;
 function demoPerformQuery() {
     // console.log(publicDB);
-    container.setUpAuth()
-        .then(function (userInfo) {
-            // The userInfo is that of the user who created the key in CloudKit Dashboard.
-            // If this user has permission to write a record of type Item to the
-            // public database, the following call will succeed.
-            // return database.saveRecords({ recordType: 'Item' });
-            publicDB.performQuery({ recordType: 'Roll' }).then(function (response) {
-                console.log(response)
-            }).catch(function (error) {
-                console.log(error)
-            })
-
-        }).then(function (response) {
-            var savedRecord = response.records[0];
-            console.log('Record name:', savedRecord.recordName);
-            process.exit(0);
-        }).catch(function (error) {
-            // Handle the error.
-            process.exit(1);
-        });
-
-}
-
+    
+    publicDB.performQuery({recordType: 'Items'}).then(function(response){
+      console.log(response)
+    }).catch(function(error){
+      console.log(error)
+    })
+  }
+//   https://cdn.apple-cloudkit.com/cloudkit-catalog/#readme/Server-side-CloudKit-with-node-js
+// https://icloud.developer.apple.com/dashboard#containers/iCloud.com.commonworldinc.dev.Dice/environments/Production/api-access/
 const requestHandler = (request, response) => {
     demoPerformQuery()
     response.end('Hello Node.js Server!')
